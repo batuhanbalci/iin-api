@@ -1,18 +1,12 @@
-import { Bank, CardScheme, CardType } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { CardType } from '@prisma/client';
 import {
   IsBoolean,
   IsEnum,
-  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  ValidateIf,
-  ValidateNested,
 } from 'class-validator';
-import { CreateBankDto } from './create-bank.dto';
-import { CreateCardSchemeDto } from './create-card-scheme.dto';
 
 export class CreateIinDto {
   @IsNotEmpty()
@@ -42,21 +36,11 @@ export class CreateIinDto {
   @IsString()
   readonly countryCode: string;
 
-  @ValidateIf((o) => o.cardScheme === undefined)
-  @IsMongoId()
-  readonly cardScehemeId: string;
+  @IsOptional()
+  @IsString()
+  readonly bank: string;
 
-  @ValidateIf((o) => o.cardScehemeId === undefined)
-  @Type(() => CreateCardSchemeDto)
-  @ValidateNested({ each: true })
-  readonly cardScheme: CardScheme;
-
-  @ValidateIf((o) => o.bank === undefined)
-  @IsMongoId()
-  readonly bankId: string;
-
-  @ValidateIf((o) => o.bankId === undefined)
-  @Type(() => CreateBankDto)
-  @ValidateNested({ each: true })
-  readonly bank: Bank;
+  @IsNotEmpty()
+  @IsString()
+  readonly scheme: string;
 }

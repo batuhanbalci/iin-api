@@ -23,34 +23,11 @@ model IssuerIdentificationNumber {
   iinStart     String
   iinEnd       String?
   isPrepaid    Boolean  @default(false)
-  numberLength Int
+  numberLength Int?
   brand        String?
   countryCode  String
-
-  cardScheme   CardScheme @relation(fields: [cardSchemeId], references: [id])
-  cardSchemeId String     @db.ObjectId
-
-  bank   Bank   @relation(fields: [bankId], references: [id])
-  bankId String @db.ObjectId
+  scheme       String
+  bank         String?
 
   @@map(name: "iins")
-}
-
-model CardScheme {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-
-  issuerIdentificationNumbers IssuerIdentificationNumber[]
-
-  @@map(name: "card_schemes")
-}
-
-model Bank {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-  url  String
-
-  issuerIdentificationNumbers IssuerIdentificationNumber[]
-
-  @@map(name: "banks")
 }
