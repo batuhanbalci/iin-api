@@ -4,6 +4,6 @@ import { IinService } from './iin.service';
 
 @Module({
   controllers: [IinController],
-  providers: [IinService]
+  providers: [IinService],
 })
 export class IinModule {}

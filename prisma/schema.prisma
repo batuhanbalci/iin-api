@@ -10,45 +10,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Type {
+enum CardType {
   CREDIT
   DEBIT
+
+  @@map("card_type")
 }
 
 model IssuerIdentificationNumber {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  type Type
-  iinStart String
-  iinEnd String?
-  isPrepaid Boolean
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  type         CardType
+  iinStart     String
+  iinEnd       String?
+  isPrepaid    Boolean  @default(false)
   numberLength Int
-  brand String?
-  countryCode String
-  
-  cardScheme CardScheme @relation(fields: [cardSchemeId], references: [id])
-  cardSchemeId String @db.ObjectId
+  brand        String?
+  countryCode  String
 
-  bank Bank @relation(fields: [bankId], references: [id])
+  cardScheme   CardScheme @relation(fields: [cardSchemeId], references: [id])
+  cardSchemeId String     @db.ObjectId
+
+  bank   Bank   @relation(fields: [bankId], references: [id])
   bankId String @db.ObjectId
 
-  @@map(name : "iins")
+  @@map(name: "iins")
 }
 
 model CardScheme {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
 
   issuerIdentificationNumbers IssuerIdentificationNumber[]
 
-  @@map(name : "card_schemes")
+  @@map(name: "card_schemes")
 }
 
 model Bank {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String
-  url String
+  url  String
 
   issuerIdentificationNumbers IssuerIdentificationNumber[]
 
-  @@map(name : "banks")
+  @@map(name: "banks")
 }
