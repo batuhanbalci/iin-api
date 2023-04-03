@@ -1,33 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { IssuerIdentificationNumber } from '@prisma/client';
+import { Country } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateIinDto } from './dto/create-iin.dto';
+import { CreateCountryDto } from './dto/create-country.dto';
 
 @Injectable()
 export class IinService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<IssuerIdentificationNumber[]> {
-    return this.prisma.issuerIdentificationNumber.findMany();
-  }
+  // async validate(iin: string): Promise<IssuerIdentificationNumber[]> {
+  //   return '';
+  // }
 
-  async create(dto: CreateIinDto): Promise<IssuerIdentificationNumber> {
+  // async findAll(): Promise<IssuerIdentificationNumber[]> {
+  //   return this.prisma.issuerIdentificationNumber.findMany();
+  // }
+
+  // async create(dto: CreateIinDto): Promise<IssuerIdentificationNumber> {
+  //   try {
+  //     const card = await this.prisma.card.create({
+  //       data: {},
+  //     });
+
+  //     return card;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  async createCountry(dto: CreateCountryDto): Promise<Country> {
     try {
-      const iin = await this.prisma.issuerIdentificationNumber.create({
-        data: {
-          iinStart: dto.iinStart,
-          iinEnd: dto.iinEnd,
-          countryCode: dto.countryCode,
-          type: dto.type,
-          isPrepaid: dto.isPrepaid,
-          numberLength: dto.numberLength,
-          brand: dto.brand,
-          scheme: dto.scheme,
-          bank: dto.bank,
+      const country = await this.prisma.country.upsert({
+        where: {
+          name: dto.name,
+        },
+        update: {
+          name: dto.name,
+          code1: dto.code1,
+          code2: dto.code2,
+        },
+        create: {
+          name: dto.name,
+          code1: dto.code1,
+          code2: dto.code2,
         },
       });
 
-      return iin;
+      return country;
     } catch (error) {
       console.error(error);
     }

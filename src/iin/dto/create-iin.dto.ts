@@ -11,11 +11,7 @@ import {
 export class CreateIinDto {
   @IsNotEmpty()
   @IsString()
-  readonly iinStart: string;
-
-  @IsOptional()
-  @IsString()
-  readonly iinEnd: string;
+  readonly iin: string;
 
   @IsEnum(CardType)
   readonly type: CardType;
@@ -38,7 +34,7 @@ export class CreateIinDto {
 
   @IsOptional()
   @IsString()
-  readonly bank: string;
+  readonly issuer: string;
 
   @IsNotEmpty()
   @IsString()

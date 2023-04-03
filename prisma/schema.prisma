@@ -17,17 +17,62 @@ enum CardType {
   @@map("card_type")
 }
 
-model IssuerIdentificationNumber {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  type         CardType
-  iinStart     String
-  iinEnd       String?
-  isPrepaid    Boolean  @default(false)
-  numberLength Int?
-  brand        String?
-  countryCode  String
-  scheme       String
-  bank         String?
+model Card {
+  id   String   @id @default(auto()) @map("_id") @db.ObjectId
+  iin  String   @unique
+  type CardType
 
-  @@map(name: "iins")
+  scheme   Scheme @relation(fields: [schemeId], references: [id])
+  schemeId String @db.ObjectId
+
+  issuer   Issuer? @relation(fields: [issuerId], references: [id])
+  issuerId String? @db.ObjectId
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?   @db.ObjectId
+
+  @@map(name: "card")
+}
+
+model Issuer {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  website String?
+  phone   String?
+
+  cards Card[]
+
+  country   Country? @relation(fields: [countryId], references: [id])
+  countryId String?  @db.ObjectId
+
+  @@map("issuers")
+}
+
+model Scheme {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  cards Card[]
+
+  @@map("schemes")
+}
+
+model Category {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  cards Card[]
+
+  @@map("categories")
+}
+
+model Country {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  name  String @unique
+  code1 String
+  code2 String
+
+  issuers Issuer[]
+
+  @@map("countries")
 }
