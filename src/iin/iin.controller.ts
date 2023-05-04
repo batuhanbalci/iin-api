@@ -1,27 +1,23 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
+import { FindUniqueDto, PaginationQueryDto } from 'src/iin/dto/query.dto';
 import { IinService } from './iin.service';
 
 @Controller('iin')
 export class IinController {
   constructor(private iinService: IinService) {}
 
-  // @Get()
-  // async findAll() {
-  //   return this.iinService.findAll();
-  // }
+  @Get('all')
+  async findAll(@Query() query: PaginationQueryDto) {
+    return this.iinService.findAll(query.skip, query.take);
+  }
 
-  // @Post('validate')
-  // async validate(@Body('iin') iin: string) {
-  //   return this.iinService.validate(iin);
-  // }
+  @Get()
+  async findOne(@Query() query: FindUniqueDto) {
+    return this.iinService.findOne(query.bin);
+  }
 
-  // @Post()
-  // async create(@Body() dto: CreateIinDto) {
-  //   this.iinService.create(dto);
-  // }
-
-  @Post('country')
-  async create() {
-    return null;
+  @Get('issuer')
+  async findManyByIssuer(@Query('issuer') issuer: string) {
+    return this.iinService.findManyByIssuer(issuer);
   }
 }

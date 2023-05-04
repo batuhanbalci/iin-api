@@ -1,53 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { Country } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCountryDto } from './dto/create-country.dto';
 
 @Injectable()
 export class IinService {
   constructor(private prisma: PrismaService) {}
 
-  // async validate(iin: string): Promise<IssuerIdentificationNumber[]> {
-  //   return '';
-  // }
+  async findAll(skip: number, take: number) {
+    if (skip === undefined) skip = 0;
+    if (take === undefined) take = 10;
+    return await this.prisma.card.findMany({
+      skip: skip,
+      take: take,
+    });
+  }
 
-  // async findAll(): Promise<IssuerIdentificationNumber[]> {
-  //   return this.prisma.issuerIdentificationNumber.findMany();
-  // }
+  async findOne(bin: number) {
+    return await this.prisma.card.findUnique({
+      where: { bin: bin },
+    });
+  }
 
-  // async create(dto: CreateIinDto): Promise<IssuerIdentificationNumber> {
-  //   try {
-  //     const card = await this.prisma.card.create({
-  //       data: {},
-  //     });
-
-  //     return card;
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
-
-  async createCountry(dto: CreateCountryDto): Promise<Country> {
-    try {
-      const country = await this.prisma.country.upsert({
-        where: {
-          name: dto.name,
-        },
-        update: {
-          name: dto.name,
-          code1: dto.code1,
-          code2: dto.code2,
-        },
-        create: {
-          name: dto.name,
-          code1: dto.code1,
-          code2: dto.code2,
-        },
-      });
-
-      return country;
-    } catch (error) {
-      console.error(error);
-    }
+  async findManyByIssuer(issuer: string) {
+    return await this.prisma.card.findMany({
+      where: { issuer: issuer },
+    });
   }
 }

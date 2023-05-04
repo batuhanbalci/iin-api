@@ -10,69 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum CardType {
-  CREDIT
-  DEBIT
-
-  @@map("card_type")
-}
-
 model Card {
-  id   String   @id @default(auto()) @map("_id") @db.ObjectId
-  iin  String   @unique
-  type CardType
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  bin         Int       @unique
+  brand       String
+  type        String
+  issuer      String?
+  alpha2      String    @map("alpha_2")
+  alpha3      String    @map("alpha_3")
+  country     String
+  latitude    Float
+  longitude   Float
+  bankUrl     String    @map("bank_url")
 
-  scheme   Scheme @relation(fields: [schemeId], references: [id])
-  schemeId String @db.ObjectId
-
-  issuer   Issuer? @relation(fields: [issuerId], references: [id])
-  issuerId String? @db.ObjectId
-
-  category   Category? @relation(fields: [categoryId], references: [id])
-  categoryId String?   @db.ObjectId
-
-  @@map(name: "card")
-}
-
-model Issuer {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
-  website String?
-  phone   String?
-
-  cards Card[]
-
-  country   Country? @relation(fields: [countryId], references: [id])
-  countryId String?  @db.ObjectId
-
-  @@map("issuers")
-}
-
-model Scheme {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-
-  cards Card[]
-
-  @@map("schemes")
-}
-
-model Category {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
-
-  cards Card[]
-
-  @@map("categories")
-}
-
-model Country {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  name  String @unique
-  code1 String
-  code2 String
-
-  issuers Issuer[]
-
-  @@map("countries")
+  @@map(name: "iin")
 }
