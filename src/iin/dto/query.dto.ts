@@ -11,7 +11,7 @@ export class PaginationQueryDto {
   take: number;
 }
 
-export class FindUniqueDto {
+export class ValidateQueryDto {
   @IsInt()
   @Type(() => Number)
   bin: number;

@@ -14,15 +14,31 @@ export class IinService {
     });
   }
 
-  async findOne(bin: number) {
-    return await this.prisma.card.findUnique({
+  async validate(bin: number) {
+    const card = await this.prisma.card.findUnique({
       where: { bin: bin },
     });
+
+    if (card === null) {
+      return {
+        valid: false,
+      };
+    } else {
+      delete card.id;
+      return {
+        valid: true,
+        card: card,
+      };
+    }
   }
 
   async findManyByIssuer(issuer: string) {
     return await this.prisma.card.findMany({
-      where: { issuer: issuer },
+      where: {
+        issuer: {
+          contains: issuer,
+        },
+      },
     });
   }
 }

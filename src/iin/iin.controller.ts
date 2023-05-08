@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { FindUniqueDto, PaginationQueryDto } from 'src/iin/dto/query.dto';
+import { PaginationQueryDto, ValidateQueryDto } from 'src/iin/dto/query.dto';
 import { IinService } from './iin.service';
 
-@Controller('iin')
+@Controller('/')
 export class IinController {
   constructor(private iinService: IinService) {}
 
@@ -11,9 +11,9 @@ export class IinController {
     return this.iinService.findAll(query.skip, query.take);
   }
 
-  @Get()
-  async findOne(@Query() query: FindUniqueDto) {
-    return this.iinService.findOne(query.bin);
+  @Get('validate')
+  async findOne(@Query() query: ValidateQueryDto) {
+    return this.iinService.validate(query.bin);
   }
 
   @Get('issuer')
